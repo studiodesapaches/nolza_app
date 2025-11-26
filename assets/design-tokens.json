@@ -1,0 +1,260 @@
+{
+  "$schema": "https://design-tokens.github.io/transformers/schema.json",
+  "color": {
+    "palette": {
+      "neutral": {
+        "50":  { "$value": "#f2f2f2" },
+        "100": { "$value": "#e6e6e6" },
+        "200": { "$value": "#cccccc" },
+        "300": { "$value": "#b3b3b3" },
+        "400": { "$value": "#999999" },
+        "500": { "$value": "#808080" },
+        "600": { "$value": "#666666" },
+        "700": { "$value": "#4d4d4d" },
+        "800": { "$value": "#333333" },
+        "900": { "$value": "#1a1a1a" },
+        "950": { "$value": "#0d0d0d" }
+      },
+      "black": {
+        "0":   { "$value": "#00000000" },
+        "100": { "$value": "#0000001A" },
+        "200": { "$value": "#00000033" },
+        "300": { "$value": "#0000004D" },
+        "400": { "$value": "#00000066" },
+        "500": { "$value": "#00000080" },
+        "600": { "$value": "#00000099" },
+        "700": { "$value": "#000000B3" },
+        "800": { "$value": "#000000CC" },
+        "900": { "$value": "#000000E6" },
+        "1000": { "$value": "#000000FF" }
+      },
+      "white": {
+        "0":   { "$value": "#FFFFFF00" },
+        "100": { "$value": "#FFFFFF1A" },
+        "200": { "$value": "#FFFFFF33" },
+        "300": { "$value": "#FFFFFF4D" },
+        "400": { "$value": "#FFFFFF66" },
+        "500": { "$value": "#FFFFFF80" },
+        "600": { "$value": "#FFFFFF99" },
+        "700": { "$value": "#FFFFFFB3" },
+        "800": { "$value": "#FFFFFFCC" },
+        "900": { "$value": "#FFFFFFE6" },
+        "1000": { "$value": "#FFFFFFFF" }
+      },
+      "emerald": {
+        "50":  { "$value": "#ECFDF5" },
+        "100": { "$value": "#D1FAE5" },
+        "200": { "$value": "#A7F3D0" },
+        "300": { "$value": "#6EE7B7" },
+        "400": { "$value": "#34D399" },
+        "500": { "$value": "#10B981" },
+        "600": { "$value": "#059669" },
+        "700": { "$value": "#047857" },
+        "800": { "$value": "#065F46" },
+        "900": { "$value": "#064E3B" },
+        "950": { "$value": "#022C22" }
+      }
+    },
+    "background": {
+      "surface": {
+        "default": { "$value": "{color.palette.black.1000}" },
+        "secondary": { "$value": "{color.palette.neutral.900}" },
+        "tertiary": { "$value": "{color.palette.neutral.700}" },
+        "transparent": { "$value": "{color.palette.black.700}" }
+      },
+      "inverseSurface": {
+        "default": { "$value": "{color.palette.white.1000}" }
+      },
+      "primary": {
+        "default": { "$value": "{color.palette.emerald.600}" }
+      },
+      "disabled": {
+        "default": { "$value": "{color.palette.neutral.300}" }
+      },
+      "utility": {
+        "scrim": { "$value": "{color.palette.black.700}" }
+      }
+    },
+    "text": {
+      "primary": { "$value": "{color.palette.neutral.900}" },
+      "muted": { "$value": "{color.palette.neutral.600}" },
+      "inverse": { "$value": "{color.palette.neutral.50}" },
+      "surface": {
+        "default": { "$value": "{color.palette.white.1000}" },
+        "secondary": { "$value": "{color.palette.neutral.300}" }
+      },
+      "inverseSurface": {
+        "default": { "$value": "{color.palette.black.1000}" }
+      },
+      "primaryAccent": {
+        "default": { "$value": "{color.palette.emerald.600}" }
+      },
+      "disabled": {
+        "default": { "$value": "{color.palette.neutral.600}" }
+      }
+    },
+    "icon": {
+      "surface": {
+        "default": { "$value": "{color.palette.white.1000}" },
+        "secondary": { "$value": "{color.palette.neutral.300}" }
+      },
+      "inverseSurface": {
+        "default": { "$value": "{color.palette.black.1000}" }
+      },
+      "primaryAccent": {
+        "default": { "$value": "{color.palette.emerald.600}" }
+      },
+      "disabled": {
+        "default": { "$value": "{color.palette.neutral.600}" }
+      }
+    },
+    "stroke": {
+      "surface": {
+        "default": { "$value": "{color.palette.white.1000}" },
+        "secondary": { "$value": "{color.palette.neutral.800}" }
+      },
+      "disabled": {
+        "default": { "$value": "{color.palette.neutral.600}" }
+      }
+    }
+  },
+  "radius": {
+    "full": { "$value": "9999", "$type": "dimension" },
+    "lg": { "$value": "24", "$type": "dimension" },
+    "md": { "$value": "16", "$type": "dimension" },
+    "sm": { "$value": "8", "$type": "dimension" }
+  },
+  "icon": {
+    "xxl": { "$value": "64", "$type": "dimension" },
+    "xl": { "$value": "40", "$type": "dimension" },
+    "lg": { "$value": "24", "$type": "dimension" },
+    "md": { "$value": "20", "$type": "dimension" },
+    "sm": { "$value": "16", "$type": "dimension" }
+  },
+  "stroke": {
+    "lg": { "$value": "2", "$type": "dimension" },
+    "md": { "$value": "1", "$type": "dimension" },
+    "sm": { "$value": "0.5", "$type": "dimension" }
+  },
+  "shadow": {
+    "drop": {
+      "$value": {
+        "shadowColor": "{color.palette.black.1000}",
+        "shadowOpacity": 0.2,
+        "shadowRadius": 16,
+        "shadowOffset": { "width": 0, "height": 4 },
+        "elevation": 4
+      },
+      "$type": "shadow"
+    }
+  },
+  "typography": {
+    "family": {
+      "base": { "$value": "Inter", "$type": "fontFamily" }
+    },
+    "weight": {
+      "regular": { "$value": "400", "$type": "fontWeight" },
+      "semibold": { "$value": "600", "$type": "fontWeight" }
+    },
+    "text": {
+      "display": {
+        "md": {
+          "$value": {
+            "fontFamily": "{typography.family.base}",
+            "fontSize": "32",
+            "lineHeight": "40",
+            "fontWeight": "{typography.weight.semibold}"
+          },
+          "$type": "typography"
+        },
+        "sm": {
+          "$value": {
+            "fontFamily": "{typography.family.base}",
+            "fontSize": "24",
+            "lineHeight": "32",
+            "fontWeight": "{typography.weight.semibold}"
+          },
+          "$type": "typography"
+        }
+      },
+      "title": {
+        "md": {
+          "$value": {
+            "fontFamily": "{typography.family.base}",
+            "fontSize": "20",
+            "lineHeight": "24",
+            "fontWeight": "{typography.weight.semibold}"
+          },
+          "$type": "typography"
+        },
+        "sm": {
+          "$value": {
+            "fontFamily": "{typography.family.base}",
+            "fontSize": "16",
+            "lineHeight": "20",
+            "fontWeight": "{typography.weight.semibold}"
+          },
+          "$type": "typography"
+        }
+      },
+      "label": {
+        "lg": {
+          "$value": {
+            "fontFamily": "{typography.family.base}",
+            "fontSize": "16",
+            "lineHeight": "20",
+            "fontWeight": "{typography.weight.semibold}"
+          },
+          "$type": "typography"
+        },
+        "md": {
+          "$value": {
+            "fontFamily": "{typography.family.base}",
+            "fontSize": "14",
+            "lineHeight": "20",
+            "fontWeight": "{typography.weight.semibold}"
+          },
+          "$type": "typography"
+        },
+        "sm": {
+          "$value": {
+            "fontFamily": "{typography.family.base}",
+            "fontSize": "12",
+            "lineHeight": "16",
+            "fontWeight": "{typography.weight.semibold}"
+          },
+          "$type": "typography"
+        }
+      },
+      "body": {
+        "lg": {
+          "$value": {
+            "fontFamily": "{typography.family.base}",
+            "fontSize": "16",
+            "lineHeight": "20",
+            "fontWeight": "{typography.weight.regular}"
+          },
+          "$type": "typography"
+        },
+        "md": {
+          "$value": {
+            "fontFamily": "{typography.family.base}",
+            "fontSize": "14",
+            "lineHeight": "20",
+            "fontWeight": "{typography.weight.regular}"
+          },
+          "$type": "typography"
+        },
+        "sm": {
+          "$value": {
+            "fontFamily": "{typography.family.base}",
+            "fontSize": "12",
+            "lineHeight": "16",
+            "fontWeight": "{typography.weight.regular}"
+          },
+          "$type": "typography"
+        }
+      }
+    }
+  },
+}
