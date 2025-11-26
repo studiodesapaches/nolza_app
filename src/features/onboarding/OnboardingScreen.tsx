@@ -209,9 +209,7 @@ const styles = StyleSheet.create({
     textAlign: 'left',
   },
   footer: {
-    paddingHorizontal: 12,
-    paddingBottom: 24,
-    paddingTop: 8,
+    paddingVertical: 16,
     alignSelf: 'stretch',
     gap: 12,
   },
