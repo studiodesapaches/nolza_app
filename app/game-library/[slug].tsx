@@ -229,6 +229,7 @@ const InstructionsSection: React.FC<{ game: Game; cardWidth: number }> = ({ game
         horizontal
         showsHorizontalScrollIndicator={false}
         contentContainerStyle={styles.instructionList}
+        style={styles.instructionListContainer}
         ItemSeparatorComponent={() => <View style={{ width: INSTRUCTION_GAP }} />}
         decelerationRate="fast"
         snapToAlignment="center"
@@ -358,7 +359,12 @@ const styles = StyleSheet.create({
     gap: 24,
     alignSelf: 'stretch',
   },
+  instructionListContainer: {
+    marginHorizontal: -12,
+  },
   instructionList: {
+    paddingLeft: 12,
+    paddingRight: 12,
   },
   instructionCard: {
     flexShrink: 0,
