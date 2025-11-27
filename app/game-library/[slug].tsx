@@ -30,12 +30,14 @@ import {
   consumePendingTipIndex,
   getNextShuffleSlug,
   incrementShuffleCount,
+  getShuffleCount,
   markShuffleSlugUsed,
   resetShuffleState,
   setPendingTipIndex,
 } from '@/src/utils/gameShuffle';
 import { theme } from '@/src/theme';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { trackEvent } from '@/lib/analytics';
 
 const INSTRUCTION_GAP = 12;
 const SAFETY_TIPS = [
@@ -72,6 +74,7 @@ const GameDetailScreen = () => {
   const insets = useSafeAreaInsets();
   const [activeTipIndex, setActiveTipIndex] = useState<number | null>(null);
   const skipResetRef = useRef(false);
+  const pageStartTimeRef = useRef<number | null>(null);
 
   useEffect(() => {
     if (Platform.OS === 'android' && UIManager.setLayoutAnimationEnabledExperimental) {
@@ -81,12 +84,44 @@ const GameDetailScreen = () => {
 
   useEffect(() => {
     markShuffleSlugUsed(slug);
+    skipResetRef.current = false;
+    pageStartTimeRef.current = Date.now();
+
+    if (game) {
+      const entryPoint =
+        originParam === 'shuffle'
+          ? 'shuffle'
+          : originParam
+          ? 'game_list'
+          : 'deep_link';
+
+      trackEvent('game_details_viewed', {
+        game_id: game.slug,
+        game_name: game.title,
+        category: 'unknown',
+        came_from_shuffle: entryPoint === 'shuffle',
+        entry_point: entryPoint,
+      });
+    }
+
     return () => {
+      if (!skipResetRef.current && game && pageStartTimeRef.current) {
+        const duration = Math.max(0, Date.now() - pageStartTimeRef.current);
+        trackEvent('time_on_game_details_page', {
+          game_id: game.slug,
+          duration_ms: duration,
+        });
+      }
+
       if (!skipResetRef.current) {
+        const shuffleCount = getShuffleCount();
+        if (shuffleCount > 0) {
+          trackEvent('shuffle_session_ended', { shuffle_count: shuffleCount });
+        }
         resetShuffleState();
       }
     };
-  }, [slug]);
+  }, [game, originParam, slug]);
 
   useEffect(() => {
     const pendingTip = consumePendingTipIndex();
@@ -97,13 +132,33 @@ const GameDetailScreen = () => {
 
   const handleBack = () => {
     // With shuffle navigation using replace, history should point back to the origin screen.
-    resetShuffleState();
     router.back();
   };
 
   const handleShuffle = () => {
     skipResetRef.current = true;
+    const nextSlug = getNextShuffleSlug(slug);
+    if (!nextSlug) {
+      skipResetRef.current = false;
+      return;
+    }
+
     const nextCount = incrementShuffleCount();
+
+    trackEvent('shuffle_used', {
+      previous_game_id: slug,
+      resulting_game_id: nextSlug,
+      shuffle_count: nextCount,
+    });
+
+    if (pageStartTimeRef.current) {
+      const duration = Math.max(0, Date.now() - pageStartTimeRef.current);
+      trackEvent('time_on_game_details_page', {
+        game_id: game.slug,
+        duration_ms: duration,
+      });
+    }
+
     if (nextCount % 4 === 0) {
       const tipIndex = ((nextCount / 4 - 1) % SAFETY_TIPS.length + SAFETY_TIPS.length) % SAFETY_TIPS.length;
       setPendingTipIndex(tipIndex);
@@ -111,11 +166,10 @@ const GameDetailScreen = () => {
       setPendingTipIndex(null);
     }
 
-    const nextSlug = getNextShuffleSlug(slug);
-    if (!nextSlug) return;
+    pageStartTimeRef.current = Date.now();
     router.replace({
       pathname: '/game-library/[slug]',
-      params: { slug: nextSlug, origin: originParam },
+      params: { slug: nextSlug, origin: 'shuffle' },
     });
   };
 

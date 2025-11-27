@@ -5,6 +5,7 @@ import { useRouter } from 'expo-router';
 
 import { AppText, OutlinedButton, PrimaryButton, ProgressDots, Screen, TopAppBar } from '@/src/components';
 import { theme } from '@/src/theme';
+import { trackEvent } from '@/lib/analytics';
 
 type Slide = {
   id: string;
@@ -35,6 +36,8 @@ const OnboardingScreen: React.FC<Props> = ({ onComplete, onClose }) => {
   const { width } = useWindowDimensions();
   const slideAnim = useRef(new Animated.Value(0)).current;
   const [prevIndex, setPrevIndex] = useState(0);
+  const completedSteps = useRef<Set<number>>(new Set());
+  const hasFiredCompletion = useRef(false);
 
   const slides: Slide[] = useMemo(
     () => [
@@ -103,7 +106,17 @@ const OnboardingScreen: React.FC<Props> = ({ onComplete, onClose }) => {
   }, [index, prevIndex, slideAnim, width]);
 
   const handleNext = async () => {
+    const stepNumber = index + 1;
+    if (!completedSteps.current.has(stepNumber)) {
+      trackEvent('onboarding_step_completed', { step_number: stepNumber });
+      completedSteps.current.add(stepNumber);
+    }
+
     if (isLastSlide) {
+      if (!hasFiredCompletion.current) {
+        hasFiredCompletion.current = true;
+        trackEvent('onboarding_completed');
+      }
       await onComplete();
       return;
     }

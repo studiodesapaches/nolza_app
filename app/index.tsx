@@ -9,6 +9,7 @@ import {
   setHasSeenOnboarding,
 } from '@/src/utils/onboardingStorage';
 import { theme } from '@/src/theme';
+import { trackEvent } from '@/lib/analytics';
 
 import SplashScreen from './SplashScreen';
 import HomeScreen from './HomeScreen';
@@ -23,6 +24,7 @@ const Home = () => {
   const contentOpacity = useRef(new Animated.Value(0)).current;
   const reopenTranslateY = useRef(new Animated.Value(0)).current;
   const { height: windowHeight } = useWindowDimensions();
+  const hasLoggedInitialOnboardingStart = useRef(false);
 
   const scheduleSplashTransition = useCallback(() => {
     if (splashTimeoutRef.current) {
@@ -95,6 +97,8 @@ const Home = () => {
   }, [contentOpacity, scheduleSplashTransition, splashOpacity]);
 
   const handleOpenOnboardingFromHome = useCallback(() => {
+    trackEvent('onboarding_revisited', { entry_point: 'home_button' });
+    trackEvent('onboarding_started', { entry_point: 'revisit' });
     reopenTranslateY.setValue(windowHeight);
     setShowOnboardingAgain(true);
   }, [reopenTranslateY, windowHeight]);
@@ -125,6 +129,13 @@ const Home = () => {
 
   const shouldShowInitialOnboarding = !isLoadingOnboardingState && !hasSeenOnboarding;
   const shouldShowHome = !isLoadingOnboardingState && hasSeenOnboarding;
+
+  useEffect(() => {
+    if (shouldShowInitialOnboarding && !hasLoggedInitialOnboardingStart.current) {
+      hasLoggedInitialOnboardingStart.current = true;
+      trackEvent('onboarding_started', { entry_point: 'first_launch' });
+    }
+  }, [shouldShowInitialOnboarding]);
 
   return (
     <View style={styles.root}>

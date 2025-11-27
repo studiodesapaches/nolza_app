@@ -1,14 +1,29 @@
-import React from 'react';
-import { ScrollView, StyleSheet, View } from 'react-native';
+import React, { useRef } from 'react';
+import { NativeScrollEvent, NativeSyntheticEvent, ScrollView, StyleSheet, View } from 'react-native';
 import { CaretLeft } from 'phosphor-react-native';
 import { useRouter } from 'expo-router';
 
 import { AppText, GameLibraryCard, ResponsibleDrinkingBanner, Screen, TopAppBar } from '@/src/components';
 import { games } from '@/src/data/games';
 import { theme } from '@/src/theme';
+import { trackEvent } from '@/lib/analytics';
 
 const GameLibraryScreen = () => {
   const router = useRouter();
+  const lastBucketRef = useRef(0);
+
+  const handleScroll = (event: NativeSyntheticEvent<NativeScrollEvent>) => {
+    const { contentOffset, contentSize, layoutMeasurement } = event.nativeEvent;
+    const scrollY = contentOffset.y;
+    const maxScrollable = Math.max(contentSize.height - layoutMeasurement.height, 1);
+    const depth = Math.min(100, Math.round((scrollY / maxScrollable) * 100));
+    const bucket = Math.min(100, Math.floor(depth / 25) * 25);
+
+    if (bucket >= lastBucketRef.current + 25 || (bucket === 100 && lastBucketRef.current < 100)) {
+      lastBucketRef.current = bucket;
+      trackEvent('game_list_scrolled', { scroll_depth_percentage: bucket });
+    }
+  };
 
   return (
     <Screen style={styles.screen}>
@@ -22,6 +37,8 @@ const GameLibraryScreen = () => {
         contentContainerStyle={styles.content}
         showsVerticalScrollIndicator={false}
         bounces
+        onScroll={handleScroll}
+        scrollEventThrottle={200}
       >
         <View style={styles.container}>
           <AppText variant="display-md" tone="surface">

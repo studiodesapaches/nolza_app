@@ -12,6 +12,8 @@ export const resetShuffleState = () => {
   pendingTipIndex = null;
 };
 
+export const getShuffleCount = () => shuffleCount;
+
 export const getNextShuffleSlug = (excludeSlug?: string): string | null => {
   const buildPool = () => allSlugs().filter((slug) => slug !== excludeSlug);
 
