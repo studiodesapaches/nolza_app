@@ -10,7 +10,8 @@ import OutlinedButton from '@/src/components/ui/OutlinedButton';
 import { Notebook, Shuffle, Confetti, Cheers, ArrowClockwise } from 'phosphor-react-native';
 import { theme } from '@/src/theme';
 import { ResponsibleDrinkingBanner } from '@/src/components';
-import { getNextShuffleSlug, resetShuffleState } from '@/src/utils/gameShuffle';
+import { getNextShuffleSlug, incrementShuffleCount, resetShuffleState } from '@/src/utils/gameShuffle';
+import { trackEvent } from '@/lib/analytics';
 
 type Props = {
   onRestartFromSplash?: () => void;
@@ -22,9 +23,18 @@ const HomeScreen = ({ onRestartFromSplash, onShowOnboarding }: Props) => {
   const handleShuffle = useCallback(() => {
     // Reset cycle when entering a new shuffle session from home
     resetShuffleState();
+    const previousGameId: string | null = null;
     const slug = getNextShuffleSlug();
     if (!slug) return;
-    router.push({ pathname: '/game-library/[slug]', params: { slug, origin: 'home' } });
+
+    const shuffleCount = incrementShuffleCount();
+    trackEvent('shuffle_used', {
+      previous_game_id: previousGameId,
+      resulting_game_id: slug,
+      shuffle_count: shuffleCount,
+    });
+
+    router.push({ pathname: '/game-library/[slug]', params: { slug, origin: 'shuffle' } });
   }, [router]);
 
   return (
