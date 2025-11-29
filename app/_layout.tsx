@@ -4,6 +4,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 import { PostHogProvider } from 'posthog-react-native'
 import { Stack, usePathname } from 'expo-router'
 import { StatusBar } from 'expo-status-bar'
+import * as SystemUI from 'expo-system-ui'
 import { useFonts, Inter_400Regular, Inter_600SemiBold } from '@expo-google-fonts/inter'
 import SplashScreen from './SplashScreen'
 import { getCurrentSessionId, posthogClient, startNewSession, trackEvent } from '@/lib/analytics'
@@ -19,10 +20,17 @@ export default function RootLayout() {
 
   const posthogApiKey = process.env.EXPO_PUBLIC_POSTHOG_KEY
   const posthogHost = process.env.EXPO_PUBLIC_POSTHOG_HOST ?? 'https://us.i.posthog.com'
+  const isPostHogEnabled = Boolean(posthogApiKey)
 
   const appState = useRef<AppStateStatus>(AppState.currentState)
   const sessionStartTimestamp = useRef<number | null>(null)
   const pathname = usePathname()
+
+  useEffect(() => {
+    SystemUI.setBackgroundColorAsync('#000000').catch((error) => {
+      console.warn('[ui] Failed to set system UI background color', error)
+    })
+  }, [])
 
   useEffect(() => {
     const markInstalled = async () => {
@@ -84,6 +92,28 @@ export default function RootLayout() {
     return <SplashScreen />
   }
 
+  const appContent = (
+    <ErrorBoundary screenName={pathname}>
+      <StatusBar style="light" backgroundColor="#000" />
+      <Stack
+        screenOptions={{
+          headerShown: false,
+          animation: 'none',
+          contentStyle: { backgroundColor: '#000' },
+        }}
+      >
+        <Stack.Screen name="game-library" options={{ animation: 'slide_from_right' }} />
+        <Stack.Screen name="game-library/[slug]" options={{ animation: 'slide_from_right' }} />
+        <Stack.Screen name="guidelines" options={{ animation: 'slide_from_right' }} />
+      </Stack>
+    </ErrorBoundary>
+  )
+
+  if (!isPostHogEnabled) {
+    console.warn('[analytics] PostHog API key missing; rendering without analytics provider')
+    return appContent
+  }
+
   return (
     <PostHogProvider
       client={posthogClient ?? undefined}
@@ -94,14 +124,7 @@ export default function RootLayout() {
       }}
       autocapture
     >
-      <ErrorBoundary screenName={pathname}>
-        <StatusBar style="light" backgroundColor="#000" />
-        <Stack screenOptions={{ headerShown: false, animation: 'none' }}>
-          <Stack.Screen name="game-library" options={{ animation: 'slide_from_right' }} />
-          <Stack.Screen name="game-library/[slug]" options={{ animation: 'slide_from_right' }} />
-          <Stack.Screen name="guidelines" options={{ animation: 'slide_from_right' }} />
-        </Stack>
-      </ErrorBoundary>
+      {appContent}
     </PostHogProvider>
   )
 }

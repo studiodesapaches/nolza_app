@@ -112,27 +112,30 @@ const HomeScreen = ({ onRestartFromSplash, onShowOnboarding }: Props) => {
               />
             </View>
           </View>
-          <View style={[styles.container, styles.devContainer]}>
-            <AppText variant="label-md" tone="muted">
-              Developer tools
-            </AppText>
-            <OutlinedButton
-              title="Replay splash and onboarding"
-              onPress={onRestartFromSplash}
-              disabled={!onRestartFromSplash}
-              icon={
-                <ArrowClockwise
-                  size={theme.icons.md}
-                  color={theme.colors.text.surface.default}
-                  weight="bold"
-                />
-              }
-              style={styles.devButton}
-            />
-            <AppText variant="body-sm" tone="muted" style={styles.devCaption}>
-              Clears onboarding storage so the app reopens on the splash and onboarding screens.
-            </AppText>
-          </View>
+          {/* Uncomment for internal builds */}
+          {false && (
+            <View style={[styles.container, styles.devContainer]}>
+              <AppText variant="label-md" tone="muted">
+                Developer tools
+              </AppText>
+              <OutlinedButton
+                title="Replay splash and onboarding"
+                onPress={onRestartFromSplash}
+                disabled={!onRestartFromSplash}
+                icon={
+                  <ArrowClockwise
+                    size={theme.icons.md}
+                    color={theme.colors.text.surface.default}
+                    weight="bold"
+                  />
+                }
+                style={styles.devButton}
+              />
+              <AppText variant="body-sm" tone="muted" style={styles.devCaption}>
+                Clears onboarding storage so the app reopens on the splash and onboarding screens.
+              </AppText>
+            </View>
+          )}
         </View>
         <View style={styles.bannerSection}>
           <ResponsibleDrinkingBanner onPress={() => router.push('/guidelines')} />

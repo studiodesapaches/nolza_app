@@ -1,0 +1,25 @@
+{
+  "cli": {
+    "version": ">= 16.28.0",
+    "appVersionSource": "remote"
+  },
+  "build": {
+    "development": {
+      "developmentClient": true,
+      "distribution": "internal"
+    },
+    "preview": {
+      "distribution": "internal"
+    },
+    "production": {
+      "autoIncrement": true,
+      "env": {
+        "EXPO_PUBLIC_POSTHOG_KEY": "phc_5hUKvetu2MTF8AihUzNg0r9VoapPmvPKphMZtDr3gu4",
+        "EXPO_PUBLIC_POSTHOG_HOST": "https://us.i.posthog.com"
+      }
+    }
+  },
+  "submit": {
+    "production": {}
+  }
+}
